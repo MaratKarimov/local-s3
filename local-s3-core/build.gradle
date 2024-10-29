@@ -10,4 +10,6 @@ dependencies {
     implementation(libs.commonsIo)
     implementation(libs.apacheCommonsLang3)
     implementation(libs.apacheCommonsCodec)
+    implementation platform("com.amazonaws:aws-java-sdk-bom:1.12.529")
+    implementation "com.amazonaws:aws-java-sdk-s3"
 }

@@ -36,6 +36,10 @@ public interface LocalS3Manager {
     return new FileSystemLocalS3Manager(dataDirectory);
   }
 
+  static LocalS3Manager createS3GatewayLocalS3Manager() {
+    return new S3GatewayLocalS3Manager();
+  }
+
   /**
    * Get a bucket service.
    *

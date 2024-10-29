@@ -10,5 +10,7 @@ public enum LocalS3Mode {
   /**
    * Store data in memory. Data will be lost after restart the service.
    */
-  IN_MEMORY
+  IN_MEMORY,
+
+  S3_GATEWAY
 }

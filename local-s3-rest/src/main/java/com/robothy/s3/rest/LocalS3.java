@@ -108,6 +108,9 @@ public class LocalS3 {
     if (mode == LocalS3Mode.IN_MEMORY) {
       log.info("Created in-memory LocalS3 manager.");
       manager = LocalS3Manager.createInMemoryS3Manager(dataPath, initialDataCacheEnabled);
+    } else if (mode == LocalS3Mode.S3_GATEWAY){
+      log.info("Created S3 gateway LocalS3 manager.");
+      manager = LocalS3Manager.createS3GatewayLocalS3Manager();
     } else {
       log.info("Created file system LocalS3 manager.");
       manager = LocalS3Manager.createFileSystemS3Manager(dataPath);
