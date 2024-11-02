@@ -2,27 +2,29 @@ package com.robothy.s3.rest.handler;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.robothy.netty.http.HttpRequest;
-import com.robothy.netty.http.HttpRequestHandler;
 import com.robothy.netty.http.HttpResponse;
 import com.robothy.s3.core.exception.S3ErrorCode;
 import com.robothy.s3.datatypes.response.S3Error;
+import com.robothy.s3.rest.handler.base.BaseController;
+import com.robothy.s3.rest.security.AuthHandlerService;
 import com.robothy.s3.rest.service.ServiceFactory;
 import com.robothy.s3.rest.utils.ResponseUtils;
 import io.netty.handler.codec.http.HttpResponseStatus;
 
-class NotImplementedOperationController implements HttpRequestHandler {
+class NotImplementedOperationController extends BaseController {
 
   private final XmlMapper xmlMapper;
 
   private final String operation;
 
-  public NotImplementedOperationController(ServiceFactory serviceFactory, String operation) {
+  public NotImplementedOperationController(ServiceFactory serviceFactory, String operation, final AuthHandlerService authHandlerService) {
+    super(authHandlerService);
     this.xmlMapper = serviceFactory.getInstance(XmlMapper.class);
     this.operation = operation;
   }
 
   @Override
-  public void handle(HttpRequest request, HttpResponse response) throws Exception {
+  public void handle0(HttpRequest request, HttpResponse response) throws Exception {
 
     String msg = "LocalS3 doesn't support operation '" + operation + "'. "
         + "If you need this feature, please submit an issue at "

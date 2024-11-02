@@ -36,4 +36,12 @@ public class AmzHeaderNames {
    *
    */
   public static final String X_AMZ_META_PREFIX = "x-amz-meta-";
+
+  public static final String X_AMZ_DATE = "x-amz-date";
+
+  public static final String X_AMZ_ALGORITHM = "x-amz-algorithm";
+
+  public static final String X_AMZ_SECURITY_TOKEN = "x-amz-security-token";
+
+  public static final String X_AMZ_SIGNED_HEADERS = "x-amz-signedheaders";
 }

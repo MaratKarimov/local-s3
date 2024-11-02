@@ -6,6 +6,10 @@ import com.robothy.netty.http.HttpRequest;
 import com.robothy.s3.core.exception.LocalS3InvalidArgumentException;
 import com.robothy.s3.core.model.request.CopyObjectOptions;
 import com.robothy.s3.rest.constants.AmzHeaderNames;
+import com.robothy.s3.rest.security.AWSSignatureV2Service;
+import com.robothy.s3.rest.security.AWSSignatureV4Service;
+import com.robothy.s3.rest.security.AuthHandlerService;
+import com.robothy.s3.rest.security.S3AuthService;
 import com.robothy.s3.rest.service.ServiceFactory;
 import java.util.stream.Stream;
 
@@ -20,7 +24,14 @@ class CopyObjectControllerTest {
   @ParameterizedTest
   void parseCopyOptions(String copySource, CopyObjectOptions result) {
     ServiceFactory serviceFactory = Mockito.mock(ServiceFactory.class);
-    CopyObjectController copyObjectController = new CopyObjectController(serviceFactory);
+
+    final S3AuthService s3AuthService = new S3AuthService();
+    final AWSSignatureV2Service awsSignatureV2Service = new AWSSignatureV2Service(s3AuthService);
+    final AWSSignatureV4Service awsSignatureV4Service = new AWSSignatureV4Service(s3AuthService);
+
+    final AuthHandlerService authHandlerService = new AuthHandlerService(s3AuthService, awsSignatureV2Service, awsSignatureV4Service);
+
+    CopyObjectController copyObjectController = new CopyObjectController(serviceFactory, authHandlerService);
     HttpRequest request = HttpRequest.builder().build();
     request.getHeaders().put(AmzHeaderNames.X_AMZ_COPY_SOURCE, copySource);
     if (result == null) {

@@ -2,7 +2,6 @@ package com.robothy.s3.rest.handler;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.robothy.netty.http.HttpRequest;
-import com.robothy.netty.http.HttpRequestHandler;
 import com.robothy.netty.http.HttpResponse;
 import com.robothy.s3.core.exception.LocalS3InvalidArgumentException;
 import com.robothy.s3.core.model.answers.CopyObjectAns;
@@ -11,7 +10,9 @@ import com.robothy.s3.core.service.CopyObjectService;
 import com.robothy.s3.core.service.ObjectService;
 import com.robothy.s3.rest.assertions.RequestAssertions;
 import com.robothy.s3.rest.constants.AmzHeaderNames;
+import com.robothy.s3.rest.handler.base.BaseController;
 import com.robothy.s3.rest.model.response.CopyObjectResult;
+import com.robothy.s3.rest.security.AuthHandlerService;
 import com.robothy.s3.rest.service.ServiceFactory;
 import com.robothy.s3.rest.utils.ResponseUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
@@ -23,19 +24,20 @@ import java.util.stream.Stream;
 /**
  * Handle <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/API_CopyObject.html">CopyObject</a>
  */
-class CopyObjectController implements HttpRequestHandler {
+class CopyObjectController extends BaseController {
 
   private final CopyObjectService objectService;
 
   private final XmlMapper xmlMapper;
 
-  CopyObjectController(ServiceFactory serviceFactory) {
+  CopyObjectController(ServiceFactory serviceFactory, final AuthHandlerService authHandlerService) {
+    super(authHandlerService);
     this.objectService = serviceFactory.getInstance(ObjectService.class);
     this.xmlMapper = serviceFactory.getInstance(XmlMapper.class);
   }
 
   @Override
-  public void handle(HttpRequest request, HttpResponse response) throws Exception {
+  public void handle0(HttpRequest request, HttpResponse response) throws Exception {
     String bucket = RequestAssertions.assertBucketNameProvided(request);
     String key = RequestAssertions.assertObjectKeyProvided(request);
     CopyObjectOptions copyObjectOptions = parseCopyOptions(request);

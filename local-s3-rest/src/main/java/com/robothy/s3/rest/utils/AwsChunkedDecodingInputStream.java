@@ -48,7 +48,7 @@ public class AwsChunkedDecodingInputStream extends InputStream {
    *
    * @param source The {@link InputStream} to wrap.
    */
-  AwsChunkedDecodingInputStream(final InputStream source) {
+  public AwsChunkedDecodingInputStream(final InputStream source) {
     this.source = source;
   }
 

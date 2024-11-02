@@ -2,7 +2,6 @@ package com.robothy.s3.rest.handler;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.robothy.netty.http.HttpRequest;
-import com.robothy.netty.http.HttpRequestHandler;
 import com.robothy.netty.http.HttpResponse;
 import com.robothy.s3.core.model.answers.ListObjectVersionsAns;
 import com.robothy.s3.core.service.ListObjectVersionsService;
@@ -10,8 +9,10 @@ import com.robothy.s3.core.service.ObjectService;
 import com.robothy.s3.datatypes.response.DeleteMarkerEntry;
 import com.robothy.s3.datatypes.response.ObjectVersion;
 import com.robothy.s3.rest.assertions.RequestAssertions;
+import com.robothy.s3.rest.handler.base.BaseController;
 import com.robothy.s3.rest.model.response.CommonPrefix;
 import com.robothy.s3.rest.model.response.ListVersionsResult;
+import com.robothy.s3.rest.security.AuthHandlerService;
 import com.robothy.s3.rest.service.ServiceFactory;
 import com.robothy.s3.rest.utils.ResponseUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
@@ -24,19 +25,20 @@ import java.util.stream.Collectors;
 /**
  * Handle <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjectVersions.html">ListObjectVersions</a>
  */
-class ListObjectVersionsController implements HttpRequestHandler {
+class ListObjectVersionsController extends BaseController {
 
   private final ListObjectVersionsService listObjectVersionsService;
 
   private final XmlMapper xmlMapper;
 
-  ListObjectVersionsController(ServiceFactory serviceFactory) {
+  ListObjectVersionsController(ServiceFactory serviceFactory, final AuthHandlerService authHandlerService) {
+    super(authHandlerService);
     this.listObjectVersionsService = serviceFactory.getInstance(ObjectService.class);
     this.xmlMapper = serviceFactory.getInstance(XmlMapper.class);
   }
 
   @Override
-  public void handle(HttpRequest request, HttpResponse response) throws Exception {
+  public void handle0(HttpRequest request, HttpResponse response) throws Exception {
     String bucketName = RequestAssertions.assertBucketNameProvided(request);
     String delimiter = RequestAssertions.assertDelimiterIsValid(request).orElse(null);
     String encodingType = RequestAssertions.assertEncodingTypeIsValid(request).orElse(null);

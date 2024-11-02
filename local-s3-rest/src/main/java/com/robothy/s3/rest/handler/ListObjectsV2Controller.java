@@ -2,37 +2,43 @@ package com.robothy.s3.rest.handler;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.robothy.netty.http.HttpRequest;
-import com.robothy.netty.http.HttpRequestHandler;
 import com.robothy.netty.http.HttpResponse;
 import com.robothy.s3.core.model.answers.ListObjectsV2Ans;
 import com.robothy.s3.core.service.ObjectService;
 import com.robothy.s3.rest.assertions.RequestAssertions;
+import com.robothy.s3.rest.handler.base.BaseController;
 import com.robothy.s3.rest.model.response.CommonPrefix;
 import com.robothy.s3.rest.model.response.ListBucketV2Result;
+import com.robothy.s3.rest.security.AuthHandlerService;
 import com.robothy.s3.rest.service.ServiceFactory;
 import com.robothy.s3.rest.utils.ResponseUtils;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpResponseStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.stream.Collectors;
 
 /**
  * Handle <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjectsV2.html">ListObjectsV2</a>.
  */
-public class ListObjectsV2Controller implements HttpRequestHandler {
+public class ListObjectsV2Controller extends BaseController {
 
     private final ObjectService objectService;
 
     private final XmlMapper xmlMapper;
 
-    public ListObjectsV2Controller(ServiceFactory serviceFactory) {
+    private static final Logger log = LoggerFactory.getLogger(ListObjectsV2Controller.class);
+
+    public ListObjectsV2Controller(ServiceFactory serviceFactory, final AuthHandlerService authHandlerService) {
+        super(authHandlerService);
         this.objectService = serviceFactory.getInstance(ObjectService.class);
         this.xmlMapper = serviceFactory.getInstance(XmlMapper.class);
     }
 
     @Override
-    public void handle(HttpRequest request, HttpResponse response) throws Exception {
+    public void handle0(HttpRequest request, HttpResponse response) throws Exception {
         String bucket = RequestAssertions.assertBucketNameProvided(request);
         String delimiter = RequestAssertions.assertDelimiterIsValid(request).orElse(null);
         String encodingType = RequestAssertions.assertEncodingTypeIsValid(request).orElse(null);
