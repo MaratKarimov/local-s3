@@ -6,6 +6,8 @@ import com.robothy.netty.http.HttpResponse;
 import com.robothy.s3.core.service.BucketPolicyService;
 import com.robothy.s3.core.service.BucketService;
 import com.robothy.s3.rest.assertions.RequestAssertions;
+import com.robothy.s3.rest.handler.base.BaseController;
+import com.robothy.s3.rest.security.AuthHandlerService;
 import com.robothy.s3.rest.service.ServiceFactory;
 import com.robothy.s3.rest.utils.ResponseUtils;
 import io.netty.buffer.ByteBufInputStream;
@@ -14,11 +16,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-class BucketPolicyController {
+class BucketPolicyController extends BaseController {
 
   private final BucketPolicyService bucketPolicyService;
 
-  BucketPolicyController(ServiceFactory serviceFactory) {
+  BucketPolicyController(ServiceFactory serviceFactory, final AuthHandlerService authHandlerService) {
+    super(authHandlerService);
     this.bucketPolicyService = serviceFactory.getInstance(BucketService.class);
   }
 
@@ -60,4 +63,8 @@ class BucketPolicyController {
     ResponseUtils.addAmzRequestId(httpResponse);
   }
 
+  @Override
+  public void handle0(final HttpRequest httpRequest, final HttpResponse httpResponse) throws Exception {
+
+  }
 }

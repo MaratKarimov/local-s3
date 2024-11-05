@@ -1,14 +1,15 @@
 package com.robothy.s3.rest.handler;
 
 import com.robothy.netty.http.HttpRequest;
-import com.robothy.netty.http.HttpRequestHandler;
 import com.robothy.netty.http.HttpResponse;
 import com.robothy.s3.core.model.answers.ListPartsAns;
 import com.robothy.s3.core.service.ObjectService;
 import com.robothy.s3.datatypes.Owner;
 import com.robothy.s3.datatypes.enums.StorageClass;
 import com.robothy.s3.rest.assertions.RequestAssertions;
+import com.robothy.s3.rest.handler.base.BaseController;
 import com.robothy.s3.rest.model.response.ListPartsResult;
+import com.robothy.s3.rest.security.AuthHandlerService;
 import com.robothy.s3.rest.service.ServiceFactory;
 import com.robothy.s3.rest.utils.ResponseUtils;
 import com.robothy.s3.rest.utils.XmlUtils;
@@ -17,7 +18,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListPartsController implements HttpRequestHandler {
+public class ListPartsController extends BaseController {
 
   private static final String MAX_PARTS = "max-parts";
 
@@ -25,12 +26,13 @@ public class ListPartsController implements HttpRequestHandler {
 
   private final ObjectService objectService;
 
-  public ListPartsController(ServiceFactory serviceFactory) {
+  public ListPartsController(ServiceFactory serviceFactory, final AuthHandlerService authHandlerService) {
+    super(authHandlerService);
     this.objectService = serviceFactory.getInstance(ObjectService.class);
   }
 
   @Override
-  public void handle(HttpRequest request, HttpResponse response) throws Exception {
+  public void handle0(HttpRequest request, HttpResponse response) throws Exception {
     String bucketName = RequestAssertions.assertBucketNameProvided(request);
     String objectKey = RequestAssertions.assertObjectKeyProvided(request);
     String uploadId = RequestAssertions.assertUploadIdIsProvided(request);

@@ -5,6 +5,8 @@ import com.robothy.netty.http.HttpResponse;
 import com.robothy.s3.core.service.BucketEncryptionService;
 import com.robothy.s3.core.service.BucketService;
 import com.robothy.s3.rest.assertions.RequestAssertions;
+import com.robothy.s3.rest.handler.base.BaseController;
+import com.robothy.s3.rest.security.AuthHandlerService;
 import com.robothy.s3.rest.service.ServiceFactory;
 import com.robothy.s3.rest.utils.ResponseUtils;
 import io.netty.buffer.ByteBufInputStream;
@@ -12,11 +14,12 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import java.io.InputStream;
 
 
-class BucketEncryptionController {
+class BucketEncryptionController extends BaseController {
 
   private final BucketEncryptionService encryptionService;
 
-  BucketEncryptionController(ServiceFactory serviceFactory) {
+  BucketEncryptionController(ServiceFactory serviceFactory, final AuthHandlerService authHandlerService) {
+    super(authHandlerService);
     this.encryptionService = serviceFactory.getInstance(BucketService.class);
   }
 
@@ -53,4 +56,7 @@ class BucketEncryptionController {
         .status(HttpResponseStatus.NO_CONTENT);
   }
 
+  @Override
+  public void handle0(final HttpRequest httpRequest, final HttpResponse httpResponse) throws Exception {
+  }
 }

@@ -18,4 +18,6 @@ dependencies {
         exclude(group: "org.springframework", module: "spring-web")
     }
     implementation(libs.mockitoInline)
+    implementation 'commons-codec:commons-codec:1.17.1'
+    implementation 'com.google.guava:guava:32.0.0-jre'
 }

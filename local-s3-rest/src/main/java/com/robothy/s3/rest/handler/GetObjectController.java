@@ -1,13 +1,14 @@
 package com.robothy.s3.rest.handler;
 
 import com.robothy.netty.http.HttpRequest;
-import com.robothy.netty.http.HttpRequestHandler;
 import com.robothy.netty.http.HttpResponse;
 import com.robothy.s3.core.model.answers.GetObjectAns;
 import com.robothy.s3.core.model.request.GetObjectOptions;
 import com.robothy.s3.core.service.ObjectService;
 import com.robothy.s3.rest.assertions.RequestAssertions;
 import com.robothy.s3.rest.constants.AmzHeaderNames;
+import com.robothy.s3.rest.handler.base.BaseController;
+import com.robothy.s3.rest.security.AuthHandlerService;
 import com.robothy.s3.rest.service.ServiceFactory;
 import com.robothy.s3.rest.utils.ByteBufUtils;
 import com.robothy.s3.rest.utils.ResponseUtils;
@@ -19,16 +20,17 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 /**
  * Handle request of <a href="https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html">GetObject</a>.
  */
-class GetObjectController implements HttpRequestHandler {
+class GetObjectController extends BaseController {
 
   private final ObjectService objectService;
 
-  GetObjectController(ServiceFactory serviceFactory) {
+  GetObjectController(ServiceFactory serviceFactory, final AuthHandlerService authHandlerService) {
+    super(authHandlerService);
     this.objectService = serviceFactory.getInstance(ObjectService.class);
   }
 
   @Override
-  public void handle(HttpRequest request, HttpResponse response) throws Exception {
+  public void handle0(HttpRequest request, HttpResponse response) throws Exception {
     String bucket = RequestAssertions.assertBucketNameProvided(request);
     String key = RequestAssertions.assertObjectKeyProvided(request);
 

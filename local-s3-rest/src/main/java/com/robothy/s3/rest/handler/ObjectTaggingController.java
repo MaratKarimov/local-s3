@@ -9,6 +9,8 @@ import com.robothy.s3.core.service.ObjectTaggingService;
 import com.robothy.s3.datatypes.Tagging;
 import com.robothy.s3.rest.assertions.RequestAssertions;
 import com.robothy.s3.rest.constants.AmzHeaderNames;
+import com.robothy.s3.rest.handler.base.BaseController;
+import com.robothy.s3.rest.security.AuthHandlerService;
 import com.robothy.s3.rest.service.ServiceFactory;
 import com.robothy.s3.rest.utils.RequestUtils;
 import com.robothy.s3.rest.utils.ResponseUtils;
@@ -16,13 +18,14 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 
 import java.util.Objects;
 
-class ObjectTaggingController {
+class ObjectTaggingController extends BaseController {
 
   private final ObjectTaggingService objectTaggingService;
 
   private final XmlMapper xmlMapper;
 
-  ObjectTaggingController(ServiceFactory serviceFactory) {
+  ObjectTaggingController(ServiceFactory serviceFactory, final AuthHandlerService authHandlerService) {
+    super(authHandlerService);
     this.objectTaggingService = serviceFactory.getInstance(ObjectService.class);
     this.xmlMapper = serviceFactory.getInstance(XmlMapper.class);
   }
@@ -65,4 +68,8 @@ class ObjectTaggingController {
       .status(HttpResponseStatus.NO_CONTENT);
   }
 
+  @Override
+  public void handle0(HttpRequest httpRequest, HttpResponse httpResponse) throws Exception {
+
+  }
 }
